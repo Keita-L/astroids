@@ -9,10 +9,19 @@ from player import Player
 
 def main():
     pygame.init()
+
+    # basic game management 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     activeGame = True
     clock = pygame.time.Clock()
     dt = 0
+
+    # groups 
+    drawable = pygame.sprite.Group()
+    updatable = pygame.sprite.Group()
+    Player.containers = (drawable, updatable)
+
+    # actors
     player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     # ====== THE GAME LOOP ======
     while activeGame:
@@ -22,7 +31,10 @@ def main():
                 return
         # Draw Screen
         pygame.Surface.fill(screen, (0,0,0))
-        player.draw(screen)
+        for o in updatable:
+            o.update(dt)
+        for o in drawable:
+            o.draw(screen)
         pygame.display.flip()
         # Control FPS
         dt = clock.tick(60) / 1000
